@@ -18,14 +18,18 @@ var once sync.Once
 
 // GetInstance provê o ponto de acesso global à instância do Singleton.
 func GetInstance() *Database {
-	once.Do(func() {
-		// Este bloco é executado apenas uma única vez,
-		// mesmo se chamado por múltiplas goroutines simultaneamente.
-		fmt.Println("Criando instância única do Banco de Dados...")
-		instance = &Database{
-			connectionString: "postgres://user:password@localhost:5432/mydb",
-		}
-	})
+	if instance != nil {
+		fmt.Println("Instância já criada, retornando a instância existente...")
+	} else {
+		once.Do(func() {
+			// Este bloco é executado apenas uma única vez,
+			// mesmo se chamado por múltiplas goroutines simultaneamente.
+			fmt.Println("Criando instância única do Banco de Dados...")
+			instance = &Database{
+				connectionString: "postgres://user:password@localhost:5432/mydb",
+			}
+		})
+	}
 	return instance
 }
 
